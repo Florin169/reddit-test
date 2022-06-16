@@ -1,25 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
+import { onAuthStateChanged } from "firebase/auth";
+import React, { useEffect } from "react";
+import { Routes, Route } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import { auth } from "./firebase/firebase";
+import Home from "./pages/Home";
+import { useDispatch } from "react-redux";
+import { getUser } from "./redux/features/authSlice";
+import Community from "./pages/Community";
+import CreatePost from "./pages/CreatePost";
 
-function App() {
+const App = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      dispatch(getUser(user));
+    });
+  }, [dispatch]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/r/:id" element={<Community />} />
+        <Route path="/r/:id/submit" element={<CreatePost />} />
+      </Routes>
     </div>
   );
-}
+};
 
 export default App;
