@@ -3,9 +3,32 @@ import { useParams } from "react-router-dom";
 import AboutCommunity from "../components/community/AboutCommunity";
 import Postbar from "../components/posts/Postbar";
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import usePosts from "../hooks/usePosts";
+import Post from "../components/posts/Post";
+import { useSelector } from "react-redux";
+import SkeletonLoader from "../components/SkeletonLoader";
 
 const Community = () => {
   const { id } = useParams();
+  const {
+    fetchCommunityPosts,
+    loading,
+    fetchCommunity,
+    posts,
+    snippets,
+    singleCommunity,
+  } = usePosts();
+
+  const isJoined = !!snippets.find(
+    (snippet) => snippet.communityId === singleCommunity.id
+  );
+  console.log(isJoined);
+
+  useEffect(() => {
+    fetchCommunityPosts();
+    fetchCommunity();
+  }, []);
 
   return (
     <div>
@@ -16,7 +39,13 @@ const Community = () => {
           <div className="pl-20">
             <div className="flex items-center space-x-6">
               <h1 className="text-2xl font-bold">{id}</h1>
-              <button className="solid w-[73px] h-[30px]">Join</button>
+              <button
+                className={`${
+                  isJoined ? "outline" : "solid"
+                } w-[73px] h-[30px]`}
+              >
+                {isJoined ? "Joined" : "Join"}
+              </button>
             </div>
             <span className="text-sm font-semibold text-gray-500 ">r/{id}</span>
           </div>
@@ -28,6 +57,11 @@ const Community = () => {
           <Link to={`/r/${id}/submit`}>
             <Postbar />
           </Link>
+          {loading ? (
+            <SkeletonLoader />
+          ) : (
+            posts.map((post) => <Post key={post.id} post={post} />)
+          )}
         </div>
         <AboutCommunity />
       </div>

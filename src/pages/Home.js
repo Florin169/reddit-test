@@ -9,11 +9,12 @@ import usePosts from "../hooks/usePosts";
 import { useSelector } from "react-redux";
 
 const Home = () => {
-  const { fetchPosts } = usePosts();
+  const { fetchPosts, fetchSnippets } = usePosts();
   const posts = useSelector((state) => state.community.posts);
 
   useEffect(() => {
     fetchPosts();
+    fetchSnippets();
   }, []);
 
   return (

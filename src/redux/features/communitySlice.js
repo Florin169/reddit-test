@@ -3,7 +3,10 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   communityModal: false,
   communities: [],
+  singleCommunity: {},
   posts: [],
+  communityPosts: [],
+  snippets: [],
 };
 
 const communitySlice = createSlice({
@@ -25,6 +28,18 @@ const communitySlice = createSlice({
     getPosts: (state, action) => {
       state.posts = action.payload;
     },
+
+    getCommunityPosts: (state, action) => {
+      state.communityPosts = action.payload;
+    },
+
+    getCommunitySnippets: (state, action) => {
+      state.snippets = action.payload;
+    },
+
+    fetchSingleCommunity: (state, action) => {
+      state.singleCommunity = action.payload;
+    },
   },
 });
 
@@ -33,6 +48,9 @@ export const {
   closeCommunityModal,
   getCommunities,
   getPosts,
+  getCommunityPosts,
+  getCommunitySnippets,
+  fetchSingleCommunity,
 } = communitySlice.actions;
 
 export default communitySlice.reducer;

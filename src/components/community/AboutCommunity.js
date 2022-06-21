@@ -4,7 +4,7 @@ import { MdOutlineCake } from "react-icons/md";
 
 const AboutCommunity = () => {
   return (
-    <div className="hidden lg:block w-[277px] rounded-md bg-white my-5">
+    <div className="hidden lg:block w-[277px] h-[210px] rounded-md bg-white my-5">
       <div className="flex items-center justify-between h-11 bg-blue-500 rounded-t-md px-4 text-white">
         <h1 className="text-sm font-bold">About Community</h1>
         <BsThreeDots />
