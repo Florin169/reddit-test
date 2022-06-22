@@ -3,32 +3,15 @@ import { useParams } from "react-router-dom";
 import AboutCommunity from "../components/community/AboutCommunity";
 import Postbar from "../components/posts/Postbar";
 import { Link } from "react-router-dom";
-import { useEffect } from "react";
 import usePosts from "../hooks/usePosts";
 import Post from "../components/posts/Post";
-import { useSelector } from "react-redux";
 import SkeletonLoader from "../components/SkeletonLoader";
+import useCommunityData from "../hooks/useCommunityData";
 
 const Community = () => {
   const { id } = useParams();
-  const {
-    fetchCommunityPosts,
-    loading,
-    fetchCommunity,
-    posts,
-    snippets,
-    singleCommunity,
-  } = usePosts();
-
-  const isJoined = !!snippets.find(
-    (snippet) => snippet.communityId === singleCommunity.id
-  );
-  console.log(isJoined);
-
-  useEffect(() => {
-    fetchCommunityPosts();
-    fetchCommunity();
-  }, []);
+  const { loading, posts } = usePosts();
+  const { onJoinOrLeaveCommunity, isJoined } = useCommunityData();
 
   return (
     <div>
@@ -43,6 +26,7 @@ const Community = () => {
                 className={`${
                   isJoined ? "outline" : "solid"
                 } w-[73px] h-[30px]`}
+                onClick={() => onJoinOrLeaveCommunity()}
               >
                 {isJoined ? "Joined" : "Join"}
               </button>
@@ -60,7 +44,11 @@ const Community = () => {
           {loading ? (
             <SkeletonLoader />
           ) : (
-            posts.map((post) => <Post key={post.id} post={post} />)
+            posts.map((post) => (
+              <Link to={`/r/${id}/comments/${post.id}`}>
+                <Post key={post.id} post={post} />
+              </Link>
+            ))
           )}
         </div>
         <AboutCommunity />

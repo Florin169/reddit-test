@@ -40,6 +40,16 @@ const communitySlice = createSlice({
     fetchSingleCommunity: (state, action) => {
       state.singleCommunity = action.payload;
     },
+
+    addSnippet: (state, action) => {
+      state.snippets = [...state.snippets, action.payload];
+    },
+
+    deleteSnippet: (state, action) => {
+      state.snippets = state.snippets.filter(
+        (snippet) => snippet.communityId !== action.payload
+      );
+    },
   },
 });
 
@@ -51,6 +61,8 @@ export const {
   getCommunityPosts,
   getCommunitySnippets,
   fetchSingleCommunity,
+  addSnippet,
+  deleteSnippet,
 } = communitySlice.actions;
 
 export default communitySlice.reducer;

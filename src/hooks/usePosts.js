@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   collection,
   doc,
@@ -19,6 +19,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
+import { getPost } from "../redux/features/postSlice";
 
 const usePosts = () => {
   const dispatch = useDispatch();
@@ -65,7 +66,9 @@ const usePosts = () => {
       const snippetDocs = await getDocs(
         collection(db, `users/${user.uid}/communitySnippets`)
       );
-      const snippets = snippetDocs.docs.map((snippet) => snippet.data());
+      const snippets = snippetDocs.docs.map((snippet) => ({
+        ...snippet.data(),
+      }));
       dispatch(getCommunitySnippets(snippets));
     } catch (error) {
       console.log("fetchSnippets error", error.message);
@@ -82,12 +85,21 @@ const usePosts = () => {
     }
   };
 
+  const fetchSinglePost = async (postId) => {
+    const postDoc = await getDoc(doc(db, "posts", postId));
+    dispatch(getPost(postDoc.data()));
+  };
+
+  useEffect(() => {
+    fetchCommunityPosts();
+    fetchCommunity();
+    fetchSnippets();
+  }, [user]);
+
   return {
     fetchPosts,
-    fetchCommunityPosts,
+    fetchSinglePost,
     loading,
-    fetchSnippets,
-    fetchCommunity,
     singleCommunity,
     snippets,
     posts,
